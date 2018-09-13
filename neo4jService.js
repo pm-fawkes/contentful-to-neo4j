@@ -14,6 +14,8 @@ const cypherCommand = (cmd, params) => {
 };
 
 const emptyGraphDatabase = () => {
+
+  cypherCommand("USING PERIODIC COMMIT 500");
   cypherCommand("MATCH (a)-[m]-(b) DELETE m");
   cypherCommand("MATCH (a) DELETE a");
 };
