@@ -6,16 +6,17 @@ const driver = neo4j.driver(
   config.neo4j.uri,
   neo4j.auth.basic(config.neo4j.user, config.neo4j.password)
 );
-const session = driver.session();
-var transaction = session.beginTransaction();
 
 const cypherCommand = (cmd, params) => {
-  transaction.run(cmd, params);
+
+    const session = driver.session();
+    var transaction = session.beginTransaction();
+    transaction.run(cmd, params);
+    transaction.commit()
 };
 
 const emptyGraphDatabase = () => {
 
-  cypherCommand("USING PERIODIC COMMIT 500");
   cypherCommand("MATCH (a)-[m]-(b) DELETE m");
   cypherCommand("MATCH (a) DELETE a");
 };
@@ -24,11 +25,11 @@ const tidyUp = (msg, status) => {
   const used = process.memoryUsage().heapUsed / 1024 / 1024;
   console.log(`The script uses approximately ${used} MB`);
 
-  session.close(() => {
-    console.log(msg);
-    driver.close();
-    process.exit(status);
-  });
+  // session.close(() => {
+  //   console.log(msg);
+  //   driver.close();
+  //   process.exit(status);
+  // });
 };
 
 const finish = () => {
