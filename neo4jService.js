@@ -12,7 +12,10 @@ const cypherCommand = (cmd, params) => {
     const session = driver.session();
     var transaction = session.beginTransaction();
     transaction.run(cmd, params);
-    transaction.commit()
+    transaction.commit().then(  () => {
+            console.log('.');
+        }
+    )
 };
 
 const emptyGraphDatabase = () => {
@@ -33,20 +36,20 @@ const tidyUp = (msg, status) => {
 };
 
 const finish = () => {
-  transaction.commit().then(
-    result => {
-      result.summary.notifications.forEach(n => {
-        console.log(`${n.code} ${n.title} ${n.description} ${n.severity}`);
-      });
-
-      tidyUp("Done", 0);
-    },
-
-    reason => {
-      console.log(`Transaction failed with ${reason}`);
-      tidyUp("Error", 1);
-    }
-  );
+  // transaction.commit().then(
+  //   result => {
+  //     result.summary.notifications.forEach(n => {
+  //       console.log(`${n.code} ${n.title} ${n.description} ${n.severity}`);
+  //     });
+  //
+  //     tidyUp("Done", 0);
+  //   },
+  //
+  //   reason => {
+  //     console.log(`Transaction failed with ${reason}`);
+  //     tidyUp("Error", 1);
+  //   }
+  // );
 };
 
 const neo4jService = {
